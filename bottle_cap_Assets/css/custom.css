@@ -1,0 +1,64 @@
+:root {
+	--bs-primary: #6f42c1; /* Replace with your custom primary color */
+	--bs-secondary: #d200C8; /* Replace with your custom secondary color */
+	--bs-primary-hover: #6f42c1; /* Replace with your custom primary color */
+	--bs-secondary-hover: #36C0EA; /* Replace with your custom secondary color */
+}
+
+.custom-icon {
+    color: var(--bs-secondary) !important;
+}
+  
+.btn-primary {
+	background-color: var(--bs-primary) !important;
+	border-color: var(--bs-primary) !important;
+}
+
+.btn-secondary {
+	background-color: var(--bs-secondary) !important;
+	border-color: var(--bs-secondary) !important;
+}
+
+/* Primary button hover */
+.btn-primary:hover {
+	background-color: var(--bs-primary-hover) !important; /* Custom hover color for primary button */
+	border-color: #004494 !important;   /* Optional: Custom border color */
+	color: #fff !important;             /* Optional: Custom text color */
+}
+
+/* Secondary button hover */
+.btn-secondary:hover {
+	background-color: var(--bs-secondary-hover) !important; /* Custom hover color for secondary button */
+	border-color: #5a6268 !important;    /* Optional: Custom border color */
+	color: #fff !important;              /* Optional: Custom text color */
+}
+
+
+/* Custom styles for link-primary */
+.link-primary {
+  color: var(--bs-secondary) !important; /* Custom primary color */
+  text-decoration: none !important; /* Optional: Underline links */
+  font-weight: bold !important; /* Optional: Make it bold */
+}
+
+.link-primary:hover {
+  color: var(--bs-secondary-hover) !important; /* Custom hover color */
+  text-decoration: none !important; /* Remove underline on hover */
+}
+
+h2::before, h4::before {
+	content: '';
+	display: inline-block;
+	width: 8px; /* Adjust the width as needed */
+	height: 2em; /* Makes the rectangle the same height as the text */
+	background-color: #36C0EA; /* Change this to your desired color */
+	margin-right: 10px; /* Space between the rectangle and text */
+	vertical-align: middle; /* Aligns the rectangle vertically with the text */
+}
+
+/* Custom styles for text-primary */
+.text-primary {
+  color: var(--bs-secondary) !important; /* Custom primary color */
+  text-decoration: none !important; /* Optional: Underline links */
+  font-weight: bold !important; /* Optional: Make it bold */
+}

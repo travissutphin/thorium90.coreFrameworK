@@ -1,0 +1,169 @@
+<?php
+// Security configuration
+$securityConfig = [
+    'allowed_html_tags' => '<p><br><h1><h2><h3><h4><h5><h6><ul><ol><li><strong><em><a>',
+    'allowed_domains' => ['trusted-domain.com', 'another-trusted.com'],
+    'max_request_size' => 1024 * 1024 * 2, // 2MB
+    'csrf_token_expiry' => 3600 // 1 hour
+];
+
+/**
+ * Sanitize input data
+ * 
+ * @param string $input Input to sanitize
+ * @return string Sanitized input
+ */
+function sanitizeInput($input) {
+    return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
+}
+
+/**
+ * Clean HTML content while allowing specific tags
+ * 
+ * @param string $content HTML content
+ * @return string Cleaned HTML
+ */
+function cleanHTML($content) {
+    global $securityConfig;
+    
+    // Remove all HTML tags except allowed ones
+    $cleaned = strip_tags($content, $securityConfig['allowed_html_tags']);
+    
+    // Remove JavaScript events
+    $cleaned = preg_replace('/ on\w+="[^"]*"/i', '', $cleaned);
+    $cleaned = preg_replace('/ on\w+=\'[^\']*\'/i', '', $cleaned);
+    
+    // Only allow safe protocols in links
+    $cleaned = preg_replace(
+        '/<a\s+href\s*=\s*["\'](?!https?:\/\/|mailto:|tel:)[^"\']*["\'][^>]*>/i',
+        '',
+        $cleaned
+    );
+    
+    return $cleaned;
+}
+
+/**
+ * Validate external URLs
+ * 
+ * @param string $url URL to validate
+ * @return bool Valid status
+ */
+function isValidExternalUrl($url) {
+    global $securityConfig;
+    
+    $host = parse_url($url, PHP_URL_HOST);
+    return in_array($host, $securityConfig['allowed_domains']);
+}
+
+/**
+ * Generate CSRF token
+ * 
+ * @return string CSRF token
+ */
+function generateCSRFToken() {
+    if (empty($_SESSION['csrf_token']) || 
+        (isset($_SESSION['csrf_token_time']) && 
+         time() - $_SESSION['csrf_token_time'] > $securityConfig['csrf_token_expiry'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        $_SESSION['csrf_token_time'] = time();
+    }
+    return $_SESSION['csrf_token'];
+}
+
+/**
+ * Verify CSRF token
+ * 
+ * @param string $token Token to verify
+ * @return bool Valid status
+ */
+function verifyCSRFToken($token) {
+    return isset($_SESSION['csrf_token']) && 
+           hash_equals($_SESSION['csrf_token'], $token);
+}
+
+/**
+ * Set secure headers
+ */
+function setSecureHeaders() {
+    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';");
+    header("X-Content-Type-Options: nosniff");
+    header("X-Frame-Options: SAMEORIGIN");
+    header("X-XSS-Protection: 1; mode=block");
+    header("Referrer-Policy: strict-origin-origin-when-cross-origin");
+    header("Permissions-Policy: geolocation=()");
+}
+
+/**
+ * Rate limiting check
+ * 
+ * @param string $ip User IP
+ * @return bool Whether request should be allowed
+ */
+function checkRateLimit($ip) {
+    $cacheKey = 'rate_limit_' . md5($ip);
+    $requests = apcu_fetch($cacheKey) ?: 0;
+    
+    if ($requests > 100) { // 100 requests per minute
+        return false;
+    }
+    
+    apcu_store($cacheKey, $requests + 1, 60); // 60 seconds window
+    return true;
+}
+
+// Example usage with the previous page code:
+session_start();
+
+// Set secure headers
+setSecureHeaders();
+
+// Check rate limiting
+if (!checkRateLimit($_SERVER['REMOTE_ADDR'])) {
+    header("HTTP/1.1 429 Too Many Requests");
+    exit("Too many requests. Please try again later.");
+}
+
+// Sanitize input
+$slug = sanitizeInput($_GET['slug'] ?? 'home');
+
+// Get the page (using previous database code)
+$page = getPage($pdo, $slug);
+
+if ($page) {
+    // Clean the content
+    $page['content'] = cleanHTML($page['content']);
+    
+    // Generate CSRF token for forms
+    $csrfToken = generateCSRFToken();
+    
+    // Output with security headers
+    header("Content-Type: text/html; charset=UTF-8");
+    ?>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title><?= sanitizeInput($page['display_title']) ?></title>
+        <?php if (!empty($page['meta_description'])): ?>
+            <meta name="description" content="<?= sanitizeInput($page['meta_description']) ?>">
+        <?php endif; ?>
+    </head>
+    <body>
+        <main>
+            <h1><?= sanitizeInput($page['display_title']) ?></h1>
+            <div class="content">
+                <?= $page['content'] ?>
+            </div>
+            
+            <!-- Example of form with CSRF protection -->
+            <form method="post" action="submit.php">
+                <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
+                <!-- form fields -->
+            </form>
+        </main>
+    </body>
+    </html>
+    <?php
+}

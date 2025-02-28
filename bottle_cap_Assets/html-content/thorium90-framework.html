@@ -1,0 +1,275 @@
+   <!-- Page Banner -->
+    <section class="hero-banner text-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    
+                    <h1 class="display-4 fw-bold mb-4">Thorium90 Framework</h1>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+ <div class="container py-5">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="py-4">
+
+<nav role="navigation" aria-label="Main navigation">
+        <h2>Table of Contents</h2>
+        <ul>
+            <li><a href="#overview" class="link-primary">Overview</a></li>
+            <li><a href="#system-requirements" class="link-primary">System Requirements</a></li>
+            <li><a href="#framework-architecture" class="link-primary">Framework Architecture</a></li>
+            <li><a href="#installation" class="link-primary">Installation</a></li>
+            <li><a href="#configuration" class="link-primary">Configuration</a></li>
+            <li><a href="#directory-structure" class="link-primary">Directory Structure</a></li>
+            <li><a href="#core-components" class="link-primary">Core Components</a></li>
+            <li><a href="#database-integration" class="link-primary">Database Integration</a></li>
+            <li><a href="#security-features" class="link-primary">Security Features</a></li>
+            <li><a href="#mvc-implementation" class="link-primary">MVC Implementation</a></li>
+        </ul>
+    </nav>                    
+					
+                </div>
+            </div>
+            <div class="col-md-8">
+
+    <main role="main">
+        <article id="overview">
+            <h2>Overview</h2>
+            <p>Thorium90 is a lightweight PHP framework following the MVC (Model-View-Controller) architectural pattern. It provides a structured approach to building web applications with features like database abstraction, security measures, and modular components.</p>
+        </article>
+
+        <article id="system-requirements">
+            <h2>System Requirements</h2>
+            <ul>
+                <li>PHP 7.4 or higher</li>
+                <li>MySQL 5.7 or higher</li>
+                <li>Apache/Nginx web server</li>
+                <li>mod_rewrite enabled</li>
+            </ul>
+
+            <h3>Required PHP Extensions</h3>
+            <ul>
+                <li>PDO</li>
+                <li>mysqli</li>
+                <li>session</li>
+                <li>json</li>
+            </ul>
+        </article>
+
+        <article id="framework-architecture">
+            <h2>Framework Architecture</h2>
+            <section>
+                <h3>rad_modules: Core System Functionality</h3>
+                <ul>
+                    <li>Configuration</li>
+                    <li>Database connection</li>
+                    <li>Security features</li>
+                    <li>Helper functions</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>pip_boy_MVC: MVC Implementation</h3>
+                <ul>
+                    <li>Models (fusion_core_Models)</li>
+                    <li>Views (wasteland_Views)</li>
+                    <li>Controllers (overlord_Controllers)</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>bottle_cap_Assets: Frontend Resources</h3>
+                <ul>
+                    <li>CSS</li>
+                    <li>Images</li>
+                    <li>Custom styling</li>
+                </ul>
+            </section>
+        </article>
+
+        <article id="installation">
+            <h2>Installation</h2>
+            <ol>
+                <li>
+                    <h3>Clone the Repository</h3>
+                    <pre><code>git clone https://github.com/your-username/thorium90.app.git</code></pre>
+                </li>
+                <li>
+                    <h3>Configure Web Server</h3>
+                    <p>Point your web server to the project directory</p>
+                </li>
+                <li>
+                    <h3>Import Database Schema</h3>
+                    <pre><code>mysql -u your_username -p your_database < thorium90-app.sql</code></pre>
+                </li>
+                <li>
+                    <h3>Configure Database Connection</h3>
+                    <p>Update settings in rad_modules/_system/config.php</p>
+                </li>
+            </ol>
+        </article>
+
+        <article id="configuration">
+            <h2>Configuration</h2>
+            <section>
+                <h3>Main Configuration File</h3>
+                <p>Located at rad_modules/_system/config.php</p>
+                <pre><code>
+// Database Configuration
+define("DB_TYPE", "MYSQL");
+define("DB_SERVER", "localhost");
+define("DB_DATABASE", "your_database");
+define("DB_USER", "your_username");
+define("DB_PASSWORD", "your_password");
+
+// Application Configuration
+define("APP_DIRECTORY", "/");
+define("DEFAULT_TITLE", "Your App Title");
+define("SESSION_LIFETIME", 3600);
+define("INACTIVITY_TIMEOUT", 900);
+                </code></pre>
+            </section>
+        </article>
+
+        <article id="directory-structure">
+            <h2>Directory Structure</h2>
+            <pre><code>
+thorium90.app/
+├── bottle_cap_Assets/    # Frontend assets
+│   ├── css/
+│   └── images/
+├── pip_boy_MVC/         # MVC components
+│   ├── fusion_core_Models/
+│   ├── overlord_Controllers/
+│   └── wasteland_Views/
+├── rad_modules/         # Core system modules
+│   ├── _system/
+│   ├── _ip_log/
+│   ├── categories/
+│   ├── login/
+│   ├── quotes/
+│   └── tags/
+└── index.php           # Application entry point
+            </code></pre>
+        </article>
+
+        <article id="core-components">
+            <h2>Core Components</h2>
+            <section>
+                <h3>URL Routing</h3>
+                <pre><code>
+if(!isset($_REQUEST['alias'])){ 
+    $_REQUEST['alias'] = "home";
+}
+identify_alias_Url($_REQUEST['alias']);
+                </code></pre>
+            </section>
+
+            <section>
+                <h3>Database Abstraction</h3>
+                <pre><code>
+$conn = connection_Database();
+$stmt = mysqli_prepare($conn, $sql);
+                </code></pre>
+            </section>
+        </article>
+
+        <article id="database-integration">
+            <h2>Database Integration</h2>
+            <section>
+                <h3>Key Database Tables</h3>
+                <h4>Blog System</h4>
+                <ul>
+                    <li>blogs</li>
+                    <li>blog_categories</li>
+                    <li>blog_tags</li>
+                    <li>blog_x_categories</li>
+                    <li>blog_x_tags</li>
+                </ul>
+
+                <h4>User Management</h4>
+                <ul>
+                    <li>users (with role-based access)</li>
+                </ul>
+
+                <h4>Store System</h4>
+                <ul>
+                    <li>products</li>
+                    <li>product_categories</li>
+                    <li>product_images</li>
+                </ul>
+            </section>
+        </article>
+
+        <article id="security-features">
+            <h2>Security Features</h2>
+            <section>
+                <h3>IP-based Security</h3>
+                <ul>
+                    <li>Country blocking</li>
+                    <li>IP logging</li>
+                    <li>Request monitoring</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>User Authentication</h3>
+                <ul>
+                    <li>Role-based access control</li>
+                    <li>Session management</li>
+                    <li>Login attempt tracking</li>
+                </ul>
+            </section>
+        </article>
+
+        <article id="mvc-implementation">
+            <h2>MVC Implementation</h2>
+            <section>
+                <h3>Models</h3>
+                <pre><code>
+function read_blog($id=FALSE, $alias=FALSE, $created_at=FALSE, $limit=FALSE)
+{
+    $conn = connection_Database();
+    $sql = 'SELECT * FROM blogs WHERE 1=1';
+    if($id !== FALSE) {
+        $sql .= ' AND id = ?';
+    }
+    // ... rest of the implementation
+}
+                </code></pre>
+            </section>
+
+            <section>
+                <h3>Views</h3>
+                <pre><code>
+// Example view structure
+include('html_start.php');
+include('header.php');
+// Content
+include('footer.php');
+include('html_end.php');
+                </code></pre>
+            </section>
+
+            <section>
+                <h3>Controllers</h3>
+                <pre><code>
+if(isset($_SESSION['view']) and $_SESSION['view'] == "blog"){
+    include('pip_boy_MVC/overlord_Controllers/blog.controller.php');
+    exit;
+}
+                </code></pre>
+            </section>
+        </article>
+    </main>
+
+    <footer role="contentinfo">
+        <p>Documentation for Thorium90 Framework - Version 1.0</p>
+    </footer>
+
+            </div>
+        </div>
+    </div>

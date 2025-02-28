@@ -1,0 +1,13 @@
+# Prevent all web crawlers from accessing sensitive directories
+User-agent: *
+Disallow: /
+
+# Specify the location of the sitemap
+#Sitemap: https://.../sitemap.xml
+
+# Allow media files for SEO and user experience
+User-agent: *
+Disallow: /*.jpg$
+Disallow: /*.png$
+Disallow: /*.css$
+Disallow: /*.js$
