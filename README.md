@@ -15,7 +15,7 @@ Are you tired of wandering the barren wasteland of web development, scavenging f
 - **Blog Functionality**: Share your adventures, or warn others about that Deathclaw nest you found.
 - **Page Builder**: Construct pages faster than you can say "Another settlement needs your help!"
 - **Store**: Sell your wares, from stimpaks to super mutant repellent.
-- **Templating System**: Designed for better table views, automatically morphing into card layouts on mobile.
+- **Table Templating System**: Designed for better table views, automatically morphing into card layouts on mobile.
 
 ## Nomenclature Outline (For the Nerds Who Survived)
 Because consistency is key in a wasteland full of spaghetti code:
