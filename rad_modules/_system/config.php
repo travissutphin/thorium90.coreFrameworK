@@ -66,17 +66,23 @@
 	define("DEFAULT_TITLE","Thorium90.app");
 	define("DEFAULT_AUTHOR","Thorium90");
 	define("DEFAULT_REPLYTO","");
-	define('SESSION_LIFETIME', 3600); // 1 hour (3600 seconds) - User logged out after 1 hour - no reset
-	define('INACTIVITY_TIMEOUT', 900); // 15 minutes (900 seconds)
+	define("SESSION_LIFETIME", 3600); // 1 hour (3600 seconds) - User logged out after 1 hour - no reset
+	define("INACTIVITY_TIMEOUT", 900); // 15 minutes (900 seconds)
+	
+	// images defined
+	//blog image - primary image
+	define("BLOG_IMAGE_LENGTH") = '800';
+	define("BLOG_IMAGE_WIDTH") = '600';
+	define("BLOG_IMAGE_CROP") = FALSE;
 	
 	//ipinfo.io API key to detect IP address//
 	define("IPINFO_API_KEY","eaccd228b3739e");
 	
 	//facebook hbb login//
-	define("APP_ID","");
-	define("APP_SECRET","");
-	define("API_VERSION","");
-	define("FB_BASE_url","");
+	define("FB_APP_ID","");
+	define("FB_APP_SECRET","");
+	define("FB_API_VERSION","");
+	define("FB_BASE_URL","");
 	
 	//google	
 	define("GTM",""); // google tag manager 

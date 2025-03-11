@@ -47,7 +47,7 @@
                         <?php if($message != false){echo messages($message);} ?>
 						<div class="d-flex align-items-center justify-content-between mb-3">
                             <a href="index.html" class="">
-                                <img src="../assets/images/Thorium90-logo-x250.png" class="img-fluid">
+                                <img src="../bottle_cap_Assets/images/header.png" class="img-fluid">
                             </a>
                         </div>
                         

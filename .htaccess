@@ -5,6 +5,14 @@ RewriteCond %{SERVER_PORT} 80
 #Rewrite in root directory only
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d 
+
+# 1) Handle URLs with alias, action, and id: e.g. "blog/edit/123"
+RewriteRule ^([^/]+)/([^/]+)/([^/]+)/?$ index.php?alias=$1&action=$2&id=$3 [QSA,L]
+
+# 2) Handle URLs with alias and action: e.g. "blog/edit"
+RewriteRule ^([^/]+)/([^/]+)/?$ index.php?alias=$1&action=$2 [QSA,L]
+
+# 3) Handle URLs with only the alias: e.g. "about"
 RewriteRule ^([^/]+)/?$ index.php?alias=$1 [QSA,L]
 
 <IfModule mod_expires.c>

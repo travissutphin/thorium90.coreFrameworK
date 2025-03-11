@@ -1,7 +1,7 @@
 <?php
 /* THE-VAULT.ROOT.CONTROLLER */
 /*****************************************************************/
-include('../modules/_system/config.php');
+//include('rad_modules/_system/config.php');
 
 $message = isset($_SESSION['message']) ? $_SESSION['message'] : false;
 
@@ -27,7 +27,8 @@ if (!empty($_POST))
     }
 } else {	
     // If form was not submitted via POST, redirect to login page
-    header('Location: login.php');
+    //header('Location: index.php');
+	include('index.php');
     exit;
 }
 /*****************************************************************/
