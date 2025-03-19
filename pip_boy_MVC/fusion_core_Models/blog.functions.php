@@ -24,19 +24,20 @@
  * @return int|false              The ID of the newly created blog entry, or false on failure.
  */
 function create_Blog(
-	$title,
-	$alias,
-	$contentFull,
-	$contentIntro,
-	$metaTitle,
-	$metaDescription,
-	$categoryId,
-	$tagId,
-	$searchCriteria,
-	$partOfSeries,
-	$createdBy,
-	$fileData
-) {
+	string $title,
+    string $alias,
+    string $contentFull,
+    string $contentIntro,
+    string $metaTitle,
+    string $metaDescription,
+    int $categoryId,
+    int $tagId,
+    string $searchCriteria,
+    int $partOfSeries,
+    int $createdBy,
+    array $fileData
+): int|false {
+
 	// Establish a database connection
 	$connection = connectionDatabase();
 
@@ -64,8 +65,7 @@ function create_Blog(
 	// Verify that the connection is valid
 	// If the connection is not valid, log the error and return false
 	if (!$connection) {
-		error_log('Connection to the database failed: ' . mysqli_connect_error());
-		return false;
+		throw new DatabaseException('Connection to the database failed: ' . mysqli_connect_error());
 	}
 
 	// Prepare the statement
@@ -78,40 +78,43 @@ function create_Blog(
 		return false;
 	}
 
-	// Escape all parameters
-	// The parameters are escaped with the mysqli_real_escape_string function
-	// to prevent SQL injection attacks
-	$title = mysqli_real_escape_string($connection, $title);
-	$alias = mysqli_real_escape_string($connection, $alias);
-	$contentFull = mysqli_real_escape_string($connection, $contentFull);
-	$contentIntro = mysqli_real_escape_string($connection, $contentIntro);
-	$metaTitle = mysqli_real_escape_string($connection, $metaTitle);
-	$metaDescription = mysqli_real_escape_string($connection, $metaDescription);
-	$searchCriteria = mysqli_real_escape_string($connection, $searchCriteria);
-
-
 	// Handle the uploaded image
-	$imagePath = null; // Initialize image path
-	if (isset($fileData['image']) && $fileData['image']['error'] === UPLOAD_ERR_OK) {
-		$uploadDir = 'uploads/'; // Directory to save uploaded images
-		$fileName = basename($fileData['image']['name']);
-		$targetFilePath = $uploadDir . $fileName;
+    $imagePath = null; // Initialize image path
+    
+    // Using null safe operator to check if image exists and isn't an error
+    // This replaces the nested isset() and error check
+    $uploadError = $fileData['image']?->error ?? UPLOAD_ERR_NO_FILE;
 
-		// Move the uploaded file to the target directory
-		if (move_uploaded_file($fileData['image']['tmp_name'], $targetFilePath)) {
-			// Resize the image
-			$resizedFilePath = $uploadDir . 'resized_' . $fileName; // Path for the resized image
-			$resizeSuccess = resize_Images($targetFilePath, $resizedFilePath, BLOG_IMAGE_LENGTH, BLOG_IMAGE_WIDTH, BLOG_IMAGE_CROP); // Defined in Config
+ 	if ($uploadError === UPLOAD_ERR_OK) {
+        $uploadDir = 'uploads/'; // Directory to save uploaded images
+        $fileName = basename($fileData['image']['name']);
+        $targetFilePath = $uploadDir . $fileName;
 
-			if ($resizeSuccess) {
-				$imagePath = $resizedFilePath; // Set the image path to the resized image
-			} else {
-				error_log("Image resizing failed for: " . $targetFilePath);
-			}
-		} else {
-			error_log("Failed to move uploaded file: " . $fileData['image']['error']);
-		}
-	}
+        // Move the uploaded file to the target directory
+        if (move_uploaded_file($fileData['image']['tmp_name'], $targetFilePath)) {
+            // Resize the image using named arguments for better readability
+            $resizedFilePath = $uploadDir . 'resized_' . $fileName;
+            
+            // Using named arguments for the resize_Images function call
+            $resizeSuccess = resize_Images(
+                sourcePath: $targetFilePath,
+                destinationPath: $resizedFilePath,
+                width: BLOG_IMAGE_WIDTH, 	//defined in config file
+                height: BLOG_IMAGE_LENGTH, 	//defined in config file
+                crop: BLOG_IMAGE_CROP 		//defined in config file
+            );
+
+            if ($resizeSuccess) {
+                $imagePath = $resizedFilePath;
+            } else {
+                error_log("Image resizing failed for: " . $targetFilePath);
+            }
+        } else {
+            // Using null safe operator with optional chaining
+            $errorCode = $fileData['image']?->error ?? 'Unknown error';
+            error_log("Failed to move uploaded file: " . $errorCode);
+        }
+    }
 
 	// Bind parameters to the statement
 	// The parameters are bound to the statement with the mysqli_stmt_bind_param function
@@ -150,10 +153,20 @@ function create_Blog(
 	// The statement is closed with the mysqli_stmt_close function
 	mysqli_stmt_close($stmt);
 
+	// Close the connection
+	mysqli_close($connection);
+
 	// Return the ID of the newly created blog entry
 	// The ID of the newly created blog entry is returned
 	return $blogId;
 }
+
+
+
+
+
+
+
 
 /**
  * Read data from the blogs table based on various criteria.

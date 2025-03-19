@@ -75,6 +75,11 @@ $random_quote = read_Quotes();
 *
 ************/
 	
+	if($_REQUEST['alias'] == "the-vault"){
+		include('the-vault/controller.php');
+		exit;
+	}		
+	
 	if(!isset($_REQUEST['alias'])){ 
 		$_REQUEST['alias'] = "home";
 	}
